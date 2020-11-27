@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { MediaItemService } from './media-item.service';
 
 @Component({
   selector: 'mw-media-item-form',
@@ -9,15 +10,23 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class MediaItemFormComponent implements OnInit {
   form: FormGroup;
 
+  constructor( 
+    private formBuilder: FormBuilder,
+    private mediaItemService: MediaItemService) {
+
+    //The injection is implicit because of the "private" keyword use in the constructor signature
+    //this.formBuilder = formBuilder; 
+  }
+
   ngOnInit() {
-    this.form = new FormGroup({
-      medium: new FormControl('Movies'),
-      name: new FormControl('', Validators.compose([
+    this.form = this.formBuilder.group({
+      medium: this.formBuilder.control('Movies'),
+      name: this.formBuilder.control('', Validators.compose([
         Validators.required,
         Validators.pattern('[\\w\\-\\s\\/]+')
       ])),
-      category: new FormControl(''),
-      year: new FormControl('', this.yearValidator),
+      category: this.formBuilder.control(''),
+      year: this.formBuilder.control('', this.yearValidator),
     });
   }
 
@@ -42,5 +51,6 @@ export class MediaItemFormComponent implements OnInit {
 
   onSubmit(mediaItem) {
     console.log(mediaItem);
+    this.mediaItemService.add(mediaItem);
   }
 }
