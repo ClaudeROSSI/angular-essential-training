@@ -7,8 +7,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./media-item-form.component.css']
 })
 export class MediaItemFormComponent implements OnInit {
-  form: FormGroup;
 
+  form: FormGroup;
   ngOnInit() {
     this.form = new FormGroup({
       medium: new FormControl('Movies'),
@@ -17,8 +17,27 @@ export class MediaItemFormComponent implements OnInit {
         Validators.pattern('[\\w\\-\\s\\/]+')
       ])),
       category: new FormControl(''),
-      year: new FormControl(''),
+      year: new FormControl('', this.yearValidator)
     });
+  }
+
+  yearValidator( control: FormControl) {
+    if ( control.value.trim().length === 0 ) {
+      return null; // field is valid
+    }
+
+    const year = parseInt(control.value, 10);
+    const minYear = 1900 ;
+    const maxYear = 2100 ;
+
+    if ( year >= minYear && year <= maxYear) {
+      return null;
+    } else {
+      return {
+        minYear,
+        maxYear
+      }
+    }
   }
 
   onSubmit(mediaItem) {
