@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, catchError, } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -53,24 +54,40 @@ export class MediaItemService {
     }
   ];
 
-  get() {
-    return this.http.get<MediaItemsResponse>('mediaitems')
+  get(medium) {
+
+    const getOptions = {
+      params: { medium}
+    };
+
+    return this.http.get<MediaItemsResponse>('mediaitems', getOptions)
       .pipe(
         map((response: MediaItemsResponse) => {
           return response.mediaItems;
-        })
+        }),
+        catchError( this.handleError )
       );
   }
 
   add(mediaItem) {
-    this.mediaItems.push(mediaItem);
+
+    // JSON content type is detected automatically - the HTTP header is updated accordingly
+    return this.http.post('mediaItems', mediaItem )
+      .pipe(
+        catchError( this.handleError )
+      );
   }
 
   delete(mediaItem) {
-    const index = this.mediaItems.indexOf(mediaItem);
-    if (index >= 0) {
-      this.mediaItems.splice(index, 1);
-    }
+    return this.http.delete(`'mediaItems/${mediaItem.id}`)
+      .pipe(
+        catchError( this.handleError )
+      );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.log(error.message);
+    return throwError('An error occured');
   }
 }
 
