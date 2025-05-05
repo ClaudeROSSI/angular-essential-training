@@ -61,6 +61,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
+## CR before
+before
 
 ## More Stuff
 Check out some of my [other courses on LinkedIn Learning](https://www.linkedin.com/learning/instructors/justin-schwartzenberger?u=2125562). 
